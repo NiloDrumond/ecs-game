@@ -1,20 +1,24 @@
 import * as PIXI from "pixi.js";
+import PixiFps from "pixi-fps";
 import { install } from "@pixi/unsafe-eval";
 
-import { ants, hexToRGB } from "./data";
+import "@ecs/world";
+
 // Apply the patch to PIXI
 install(PIXI);
 
-const app = new PIXI.Application();
+import { ants, hexToRGB } from "./data";
+
+const app = new PIXI.Application({ backgroundColor: 0xf0f0f0 });
 
 document.body.appendChild(app.view);
 
-const triangleData = [-5, 0, 5, 0, 0, -12];
+const triangleData = [-10, 0, 10, 0, 0, -24];
 
 const geometry = new PIXI.Geometry().addAttribute("aVPos", triangleData);
 
 geometry.instanced = true;
-geometry.instanceCount = ants.length;
+geometry.instanceCount = 5;
 
 const positionSize = 3;
 const centerSize = 2;
@@ -58,11 +62,10 @@ geometry.addAttribute(
   true
 );
 
-const antColor = hexToRGB("#ba53de", 1);
-
+const antColor = hexToRGB("#364f6b", 1);
 function getMassCenter(arr: number[]): number[] {
   let sum: number[] = [0, 0];
-  for (let i = 0; arr.length; i++) {
+  for (let i = 0; i < arr.length / 2; i++) {
     sum[0] += arr[i * 2];
     sum[1] += arr[i * 2 + 1];
   }
@@ -70,18 +73,19 @@ function getMassCenter(arr: number[]): number[] {
 }
 
 const massCenter = getMassCenter(triangleData);
-for (let i = 0; i < geometry.instanceCount; i++) {
-  const instanceOffset = i * (positionSize + colorSize);
 
-  buffer.data[instanceOffset + 1] = ants[i].x;
-  buffer.data[instanceOffset + 2] = ants[i].y;
-  buffer.data[instanceOffset + 3] = ants[i].rot;
-  buffer.data[instanceOffset + 4] = massCenter[0];
-  buffer.data[instanceOffset + 5] = massCenter[1];
-  buffer.data[instanceOffset + 6] = antColor.r / 256;
-  buffer.data[instanceOffset + 7] = antColor.g / 256;
-  buffer.data[instanceOffset + 8] = antColor.b / 256;
-  buffer.data[instanceOffset + 9] = antColor.a / 256;
+for (let i = 0; i < geometry.instanceCount; i++) {
+  const instanceOffset = i * (positionSize + colorSize + centerSize);
+
+  buffer.data[instanceOffset + 0] = ants[i].x;
+  buffer.data[instanceOffset + 1] = ants[i].y;
+  buffer.data[instanceOffset + 2] = ants[i].rot;
+  buffer.data[instanceOffset + 3] = massCenter[0];
+  buffer.data[instanceOffset + 4] = massCenter[1];
+  buffer.data[instanceOffset + 5] = antColor.r;
+  buffer.data[instanceOffset + 6] = antColor.g;
+  buffer.data[instanceOffset + 7] = antColor.b;
+  buffer.data[instanceOffset + 8] = antColor.a;
 }
 
 console.log(buffer.data);
@@ -90,7 +94,7 @@ const shader = PIXI.Shader.from(
   `
   precision mediump float;
   attribute vec2 aVPos;
-  attribute vec2 aIPos;
+  attribute vec3 aIPos;
   attribute vec2 aCPos;
   attribute vec4 aICol;
 
@@ -98,27 +102,29 @@ const shader = PIXI.Shader.from(
   uniform mat3 projectionMatrix;
 
   varying vec4 vCol;
-  //varying mat3 rotMatrix;
 
+  vec2 rotate(vec2 v, float a) {
+    float s = sin(a);
+    float c = cos(a);
+    mat2 m = mat2(c, s, -s, c);
+    return m * v;
+  }
 
   void main() {
     vCol = aICol;
-    //rotMatrix[0] = vec3(cos(aIPos.z), sin(aIPos.z), 0.0);
-    //rotMatrix[1] = vec3(-sin(aIPos.z), cos(aIPos.z), 0.0);
-    //rotMatrix[2][0] = aCPos.x - aCPos.x * cos(aIPos.z) + aCPos.y * sin(aIPos.z);
-    //rotMatrix[2][1] = aCPos.y - aCPos.y * cos(aIPos.z) + aCPos.x * sin(aIPos.z);
-    //rotMatrix[2][2] = 1.0;
+    vec3 position = vec3((projectionMatrix * translationMatrix *  vec3(rotate(aVPos, aIPos.z) + aIPos.xy, 1.0)).xy, 1.0);
 
-
-    gl_Position = vec4((projectionMatrix * translationMatrix * vec3(aVPos + aIPos, 1.0)).xy, 0.0, 1.0);
-}`,
-  `precision mediump float;
+    gl_Position = vec4(( position ).xy, 0.0, 1.0);
+  }
+`,
+  `
+  precision mediump float;
 
   varying vec4 vCol;
 
   void main() {
-  gl_FragColor = vCol;
-}
+    gl_FragColor = vCol;
+  }
 `
 );
 
@@ -126,8 +132,20 @@ const triangles = new PIXI.Mesh(geometry, shader);
 
 triangles.position.set(400, 300);
 
+const fpsCounter = new PixiFps();
+
+app.stage.addChild(fpsCounter);
+
 app.stage.addChild(triangles);
 
 app.ticker.add((delta: number) => {
-  triangles.rotation += 0.0;
+  ants[2].rot += 0.1 * delta;
+  for (let i = 0; i < geometry.instanceCount; i++) {
+    const instanceOffset = i * (positionSize + colorSize + centerSize);
+
+    buffer.data[instanceOffset + 0] = ants[i].x;
+    buffer.data[instanceOffset + 1] = ants[i].y;
+    buffer.data[instanceOffset + 2] = ants[i].rot;
+  }
+  buffer.update();
 });

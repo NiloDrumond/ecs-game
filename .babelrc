@@ -1,5 +1,7 @@
 {
   "plugins": [
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-proposal-class-properties",
     [
       "module-resolver",
       {
@@ -7,6 +9,7 @@
         "alias": {
           "@": "./app/src",
           "@shared": "./app/src/modules/shared",
+          "@ecs": "./app/src/modules/ecs",
           "@code": "./app/src/modules/code",
           "@utils": "./app/src/utils",
           "@render": "./app/src/render",
