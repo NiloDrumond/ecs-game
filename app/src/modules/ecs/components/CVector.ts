@@ -1,7 +1,7 @@
-import APE from "ape-ecs";
+import APE from 'ape-ecs';
 
 export default class CVector extends APE.Component {
-  static type = "CVector";
+  static type = 'CVector';
   static properties = {
     speed: 0,
     angle: 0,

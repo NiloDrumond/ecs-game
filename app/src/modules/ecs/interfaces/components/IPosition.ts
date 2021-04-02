@@ -1,5 +1,5 @@
 export default interface IPosition {
-  type: "CPosition";
+  type: 'CPosition';
   x: number;
   y: number;
   angle: number;

@@ -1,13 +1,13 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-import "@/modules/render/Test";
+import '@/modules/render/Test';
 
 const Test: React.FC = () => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   return (
     <>
-      <p style={{ color: "#ffffff" }}>Typescript code</p>
+      <p style={{ color: '#ffffff' }}>Typescript code</p>
     </>
   );
 };

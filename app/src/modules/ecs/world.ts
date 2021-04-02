@@ -1,8 +1,8 @@
-import APE from "ape-ecs";
+import APE from 'ape-ecs';
 
-import { CPosition, CVector } from "./components";
+import { CPosition, CVector } from './components';
 
-import IPosition from "./interfaces/components/IPosition";
+import IPosition from './interfaces/components/IPosition';
 
 const world = new APE.World({
   trackChanges: true,
@@ -11,25 +11,25 @@ const world = new APE.World({
   // useApeDestroy: true
 });
 
-world.registerTags("Agent");
+world.registerTags('Agent');
 
 world.registerComponent(CPosition, 100);
 world.registerComponent(CVector, 100);
 
 for (let i = 0; i < 50; i++) {
   const positionC: IPosition = {
-    type: "CPosition",
+    type: 'CPosition',
     x: Math.random() * 30,
     y: Math.random() * 30,
     angle: Math.PI,
   };
 
   const e = world.createEntity({
-    tags: ["Agent"],
+    tags: ['Agent'],
     components: [positionC],
   });
 }
 
-const ents = world.getEntities("Agent");
+const ents = world.getEntities('Agent');
 
 console.log(ents);

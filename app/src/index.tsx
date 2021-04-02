@@ -5,11 +5,11 @@
 // import '@assets/fonts/Squarewave16.ttf';
 // import './index.css';
 
-import React, { Suspense } from "react";
-import ReactDOM from "react-dom";
-import { I18nextProvider } from "react-i18next";
-import i18n from "../localization/i18n.config.js";
-import App from "./App";
+import React, { Suspense } from 'react';
+import ReactDOM from 'react-dom';
+import { I18nextProvider } from 'react-i18next';
+import i18n from '../localization/i18n.config.js';
+import App from './App';
 
 ReactDOM.render(
   <I18nextProvider i18n={i18n}>
@@ -17,5 +17,5 @@ ReactDOM.render(
       <App />
     </Suspense>
   </I18nextProvider>,
-  document.getElementById("target")
+  document.getElementById('target'),
 );

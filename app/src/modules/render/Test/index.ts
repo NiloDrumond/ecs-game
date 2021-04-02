@@ -1,13 +1,13 @@
-import * as PIXI from "pixi.js";
-import PixiFps from "pixi-fps";
-import { install } from "@pixi/unsafe-eval";
+import * as PIXI from 'pixi.js';
+import PixiFps from 'pixi-fps';
+import { install } from '@pixi/unsafe-eval';
 
-import "@ecs/world";
+import '@ecs/world';
+
+import { ants, hexToRGB } from './data';
 
 // Apply the patch to PIXI
 install(PIXI);
-
-import { ants, hexToRGB } from "./data";
 
 const app = new PIXI.Application({ backgroundColor: 0xf0f0f0 });
 
@@ -15,7 +15,7 @@ document.body.appendChild(app.view);
 
 const triangleData = [-10, 0, 10, 0, 0, -24];
 
-const geometry = new PIXI.Geometry().addAttribute("aVPos", triangleData);
+const geometry = new PIXI.Geometry().addAttribute('aVPos', triangleData);
 
 geometry.instanced = true;
 geometry.instanceCount = 5;
@@ -25,46 +25,46 @@ const centerSize = 2;
 const colorSize = 4;
 const buffer = new PIXI.Buffer(
   new Float32Array(
-    geometry.instanceCount * (positionSize + colorSize + centerSize)
-  )
+    geometry.instanceCount * (positionSize + colorSize + centerSize),
+  ),
 );
 
 geometry.addAttribute(
-  "aIPos",
+  'aIPos',
   buffer,
   positionSize,
   false,
   PIXI.TYPES.FLOAT,
   4 * (positionSize + colorSize + centerSize),
   0,
-  true
+  true,
 );
 
 geometry.addAttribute(
-  "aCPos",
+  'aCPos',
   buffer,
   centerSize,
   false,
   PIXI.TYPES.FLOAT,
   4 * (positionSize + colorSize + centerSize),
   4 * positionSize,
-  true
+  true,
 );
 
 geometry.addAttribute(
-  "aICol",
+  'aICol',
   buffer,
   colorSize,
   false,
   PIXI.TYPES.FLOAT,
   4 * (positionSize + colorSize + centerSize),
   4 * (positionSize + centerSize),
-  true
+  true,
 );
 
-const antColor = hexToRGB("#364f6b", 1);
+const antColor = hexToRGB('#364f6b', 1);
 function getMassCenter(arr: number[]): number[] {
-  let sum: number[] = [0, 0];
+  const sum: number[] = [0, 0];
   for (let i = 0; i < arr.length / 2; i++) {
     sum[0] += arr[i * 2];
     sum[1] += arr[i * 2 + 1];
@@ -125,7 +125,7 @@ const shader = PIXI.Shader.from(
   void main() {
     gl_FragColor = vCol;
   }
-`
+`,
 );
 
 const triangles = new PIXI.Mesh(geometry, shader);

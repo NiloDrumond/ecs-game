@@ -1,5 +1,5 @@
-import * as PIXI from "pixi.js";
-import { install } from "@pixi/unsafe-eval";
+import * as PIXI from 'pixi.js';
+import { install } from '@pixi/unsafe-eval';
 
 // Apply the patch to PIXI
 install(PIXI);
@@ -8,7 +8,7 @@ const app = new PIXI.Application();
 
 document.body.appendChild(app.view);
 
-const geometry = new PIXI.Geometry().addAttribute("aVPos", [
+const geometry = new PIXI.Geometry().addAttribute('aVPos', [
   -70,
   0,
   70,
@@ -23,28 +23,28 @@ geometry.instanceCount = 5;
 const positionSize = 2;
 const colorSize = 3;
 const buffer = new PIXI.Buffer(
-  new Float32Array(geometry.instanceCount * (positionSize + colorSize))
+  new Float32Array(geometry.instanceCount * (positionSize + colorSize)),
 );
 
 geometry.addAttribute(
-  "aIPos",
+  'aIPos',
   buffer,
   positionSize,
   false,
   PIXI.TYPES.FLOAT,
   4 * (positionSize + colorSize),
   0,
-  true
+  true,
 );
 geometry.addAttribute(
-  "aICol",
+  'aICol',
   buffer,
   colorSize,
   false,
   PIXI.TYPES.FLOAT,
   4 * (positionSize + colorSize),
   4 * positionSize,
-  true
+  true,
 );
 
 console.log(buffer.data);
@@ -86,7 +86,7 @@ const shader = PIXI.Shader.from(
         gl_FragColor = vec4(vCol, 1.0);
     }
 
-`
+`,
 );
 
 const triangles = new PIXI.Mesh(geometry, shader);
