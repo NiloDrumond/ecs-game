@@ -16,16 +16,16 @@
       "dom.iterable"
     ],
     "allowJs": true,
-    "declaration": true,
     "sourceMap": true,
+    "noEmit": true,
     /* "outDir": "./build/" Redirect output structure to the directory. */
-    "strict": true /* Enable all strict type-checking options. */,
-    // NOTE: Need to do this until we fix up those electron JS files.
+    "strict": true,
     "noImplicitAny": true,
     "jsx": "react",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "strictPropertyInitialization": false,
     "forceConsistentCasingInFileNames": true
   }
 }

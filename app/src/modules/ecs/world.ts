@@ -1,5 +1,7 @@
 import APE from 'ape-ecs';
 
+import { renderAnts } from '@render/sprites/ants';
+import { srandom } from '@utils/math';
 import { CPosition, CVector } from './components';
 
 import IPosition from './interfaces/components/IPosition';
@@ -19,9 +21,9 @@ world.registerComponent(CVector, 100);
 for (let i = 0; i < 50; i++) {
   const positionC: IPosition = {
     type: 'CPosition',
-    x: Math.random() * 30,
-    y: Math.random() * 30,
-    angle: Math.PI,
+    x: srandom() * 200,
+    y: srandom() * 200,
+    angle: srandom() * Math.PI,
   };
 
   const e = world.createEntity({
@@ -31,5 +33,15 @@ for (let i = 0; i < 50; i++) {
 }
 
 const ents = world.getEntities('Agent');
+const arr = Array.from(ents);
+const positions: IPosition[] = [];
+for (let i = 0; i < arr.length; i++) {
+  const component = arr[i].getOne('CPosition');
+  if (component) {
+    positions.push(component.getObject() as IPosition);
+  }
+}
 
-console.log(ents);
+renderAnts(positions);
+
+export default world;

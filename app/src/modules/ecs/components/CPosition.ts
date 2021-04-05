@@ -8,3 +8,5 @@ export default class CPosition extends APE.Component {
     angle: 0,
   };
 }
+
+const a: APE.Entity;

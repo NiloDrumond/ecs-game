@@ -9,10 +9,10 @@
         "alias": {
           "@": "./app/src",
           "@shared": "./app/src/modules/shared",
+          "@render": "./app/src/modules/render",
           "@ecs": "./app/src/modules/ecs",
           "@code": "./app/src/modules/code",
           "@utils": "./app/src/utils",
-          "@render": "./app/src/render",
           "@assets": "./app/src/assets",
           "@hooks": "./app/src/hooks",
           "@components": "./app/src/components",

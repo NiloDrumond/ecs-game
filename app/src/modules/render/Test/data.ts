@@ -11,12 +11,3 @@ export const ants: PositionComponent[] = [
   { x: 60, y: 60, rot: 180 },
   { x: 80, y: 80, rot: 1.5 },
 ];
-
-export function hexToRGB(hex: string, a: number) {
-  return {
-    r: parseInt(hex.slice(1, 3), 16) / 256,
-    g: parseInt(hex.slice(3, 5), 16) / 256,
-    b: parseInt(hex.slice(5, 7), 16) / 256,
-    a,
-  };
-}
